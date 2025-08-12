@@ -1,0 +1,27 @@
+name: Build SuperBob EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    - name: Install dependencies
+      run: |
+        pip install pygame pyinstaller
+    - name: Build EXE
+      run: |
+        pyinstaller --onefile --add-data "assets;assets" main.py
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: SuperBob-Windows
+        path: dist/main.exe
